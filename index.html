@@ -2,230 +2,715 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CoinQuest">
-<meta name="theme-color" content="#0a0a1a">
-<title>CoinQuest — Expense Tracker</title>
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvaW5RdWVzdCAtIEV4cGVuc2UgVHJhY2tlciIsCiAgInNob3J0X25hbWUiOiAiQ29pblF1ZXN0IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYTBhMWEiLAogICJ0aGVtZV9jb2xvciI6ICIjMGEwYTFhIiwKICAiaWNvbnMiOiBbXQp9">
+<meta name="theme-color" content="#08060e">
+<meta name="format-detection" content="telephone=no">
+<title>CoinQuest II — Financial RPG</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ29pblF1ZXN0IElJIiwic2hvcnRfbmFtZSI6IkNvaW5RdWVzdCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDgwNjBlIiwidGhlbWVfY29sb3IiOiIjMDgwNjBlIn0=">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap');
-
+/* ================================================================
+   DESIGN SYSTEM — CoinQuest II (iOS-Optimized)
+   ================================================================ */
 :root {
-  --bg: #0a0a1a;
-  --bg2: #111128;
-  --bg3: #1a1a3e;
-  --gold: #ffd700;
-  --gold-dim: #b8960f;
-  --xp: #39ff14;
-  --hp: #ff3860;
-  --mp: #00d4ff;
-  --purple: #b24dff;
-  --card: rgba(255,255,255,0.04);
-  --border: rgba(255,255,255,0.08);
-  --text: #e8e8f0;
-  --dim: #666680;
-  --pixel: 'Press Start 2P', monospace;
-  --mono: 'JetBrains Mono', monospace;
-  --safe-t: env(safe-area-inset-top, 20px);
-  --safe-b: env(safe-area-inset-bottom, 20px);
+  --void: #08060e;
+  --abyss: #0e0b18;
+  --obsidian: #141020;
+  --slate: #1c1730;
+  --dusk: #2a2345;
+  --ash: #3d3560;
+
+  --gold: #d4a843;
+  --gold-bright: #f0c850;
+  --gold-dim: #8a6d2b;
+  --gold-glow: rgba(212,168,67,0.25);
+
+  --mana: #3b82f6;
+  --mana-glow: rgba(59,130,246,0.2);
+  --hp: #ef4444;
+  --hp-glow: rgba(239,68,68,0.2);
+  --stamina: #22c55e;
+  --stamina-glow: rgba(34,197,94,0.2);
+  --arcane: #a855f7;
+  --arcane-glow: rgba(168,85,247,0.2);
+  --frost: #67e8f9;
+
+  --glass: rgba(20,16,32,0.65);
+  --glass-border: rgba(255,255,255,0.06);
+  --text: #e8e4f0;
+  --text-mid: #9890aa;
+  --text-dim: #5a5270;
+
+  --head: 'Cinzel', serif;
+  --body: 'Outfit', sans-serif;
+
+  /* iOS Safe Areas — critical for Dynamic Island + Home Indicator */
+  --sat: env(safe-area-inset-top, 20px);
+  --sab: env(safe-area-inset-bottom, 20px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  /* Spring physics tokens */
+  --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring-native: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* ================================================================
+   1. iOS RUBBER-BAND / OVERSCROLL FIX
+   Prevents white/black gap during elastic overscroll
+   ================================================================ */
+html {
+  height: 100%;
+  overflow: hidden;
+  background: var(--void);
+}
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--void);
+  position: fixed;
+  inset: 0;
+  font-family: var(--body);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
 
-body{font-family:var(--mono);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+/* Main scrollable area — only this element scrolls */
+.app-scroll {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none; /* Chrome/FF */
+  background: var(--void);
+}
 
-body::before{content:'';position:fixed;inset:0;
+/* ================================================================
+   GLOBAL RESET — iOS NATIVE FEEL
+   ================================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Allow text selection only in inputs */
+input, textarea { -webkit-user-select: text; user-select: text; }
+/* Remove iOS input styling */
+input, select, textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0; /* prevents iOS forced rounding */
+}
+
+/* ================================================================
+   ATMOSPHERE
+   ================================================================ */
+.atmosphere {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(1.2px 1.2px at 10% 20%,rgba(255,215,0,.35) 0%,transparent 100%),
-    radial-gradient(1px 1px at 30% 60%,rgba(57,255,20,.25) 0%,transparent 100%),
-    radial-gradient(1.5px 1.5px at 50% 10%,rgba(0,212,255,.3) 0%,transparent 100%),
-    radial-gradient(1px 1px at 70% 80%,rgba(178,77,255,.25) 0%,transparent 100%),
-    radial-gradient(1px 1px at 90% 40%,rgba(255,215,0,.25) 0%,transparent 100%),
-    radial-gradient(1.3px 1.3px at 85% 15%,rgba(255,56,96,.2) 0%,transparent 100%);
-  pointer-events:none;z-index:0}
+    radial-gradient(ellipse 600px 400px at 20% 10%, rgba(168,85,247,0.06), transparent),
+    radial-gradient(ellipse 500px 500px at 80% 90%, rgba(212,168,67,0.04), transparent),
+    radial-gradient(ellipse 300px 300px at 50% 50%, rgba(59,130,246,0.03), transparent);
+}
+.dust {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.3;
+  background-image:
+    radial-gradient(1.2px 1.2px at 10% 20%, var(--gold) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, var(--frost) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 10%, var(--arcane) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 80%, var(--gold) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 40%, var(--mana) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 45%, var(--frost) 0%, transparent 100%);
+  animation: dustDrift 25s linear infinite alternate;
+  will-change: transform;
+}
+@keyframes dustDrift { from{transform:translateY(0)} to{transform:translateY(-12px)} }
 
-.app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:calc(var(--safe-t)+8px) 16px calc(var(--safe-b)+80px) 16px}
+/* ================================================================
+   APP CONTAINER — respects Dynamic Island + Home Indicator
+   ================================================================ */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  /* Dynamic Island: sat ensures content starts below it.
+     Bottom: sab + nav height (72px) + breathing room */
+  padding: calc(var(--sat) + 12px) calc(var(--sal) + 14px) calc(var(--sab) + 88px) calc(var(--sar) + 14px);
+  min-height: 100%;
+}
 
-/* Connection banner */
-.conn-banner{padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:11px;display:flex;align-items:center;gap:8px;animation:dropIn .3s ease}
-.conn-banner.ok{background:rgba(57,255,20,.08);border:1px solid rgba(57,255,20,.2);color:var(--xp)}
-.conn-banner.off{background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);color:var(--gold)}
-.conn-banner.err{background:rgba(255,56,96,.08);border:1px solid rgba(255,56,96,.2);color:var(--hp)}
-.conn-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.conn-banner.ok .conn-dot{background:var(--xp);box-shadow:0 0 6px var(--xp)}
-.conn-banner.off .conn-dot{background:var(--gold);box-shadow:0 0 6px var(--gold)}
-.conn-banner.err .conn-dot{background:var(--hp);box-shadow:0 0 6px var(--hp)}
+/* ================================================================
+   GLASS PANEL
+   ================================================================ */
+.panel {
+  background: var(--glass);
+  /* iOS Safari: must use -webkit- prefix AND unprefixed */
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
 
-/* Settings modal */
-.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:150;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s}
-.settings-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px 20px;width:90%;max-width:400px;animation:dropIn .3s ease}
-.settings-title{font-family:var(--pixel);font-size:11px;color:var(--gold);text-align:center;margin-bottom:16px}
-.settings-label{font-family:var(--pixel);font-size:7px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;display:block}
-.settings-input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:12px;font-family:var(--mono);outline:none;margin-bottom:14px;word-break:break-all}
-.settings-input:focus{border-color:var(--mp);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
-.settings-hint{font-size:10px;color:var(--dim);margin-bottom:14px;line-height:1.5}
-.settings-btns{display:flex;gap:8px}
-.sbtn{flex:1;padding:12px;border:none;border-radius:10px;font-family:var(--pixel);font-size:9px;cursor:pointer;transition:all .15s}
-.sbtn:active{transform:scale(.97)}
-.sbtn-save{background:linear-gradient(135deg,var(--gold),#ffaa00);color:var(--bg)}
-.sbtn-cancel{background:rgba(255,255,255,.06);color:var(--dim);border:1px solid var(--border)}
-.sbtn-test{background:rgba(0,212,255,.12);color:var(--mp);border:1px solid rgba(0,212,255,.2)}
-.test-result{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:11px;animation:dropIn .2s}
+/* ================================================================
+   FRAME EVOLUTION (Level-based UI)
+   ================================================================ */
+.frame-lv1 .panel { border-color: rgba(255,255,255,0.05) }
+.frame-lv5 .panel { border-color: rgba(212,168,67,0.12); box-shadow: 0 0 20px rgba(212,168,67,0.04) }
+.frame-lv10 .panel { border-color: rgba(212,168,67,0.2); box-shadow: 0 0 30px rgba(212,168,67,0.06), inset 0 1px 0 rgba(212,168,67,0.08) }
+.frame-lv15 .panel { border-color: rgba(168,85,247,0.2); box-shadow: 0 0 35px rgba(168,85,247,0.06), inset 0 1px 0 rgba(168,85,247,0.1) }
+.frame-lv25 .panel { border-image: linear-gradient(135deg,rgba(212,168,67,0.4),rgba(168,85,247,0.3),rgba(59,130,246,0.3)) 1; box-shadow: 0 0 40px rgba(212,168,67,0.08), 0 0 80px rgba(168,85,247,0.04) }
 
-/* Header */
-.header{text-align:center;margin-bottom:18px;animation:dropIn .5s ease}
-.logo{font-family:var(--pixel);font-size:18px;color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,.4),2px 2px 0 #8b6914;letter-spacing:2px}
-.logo-sub{font-size:9px;color:var(--dim);font-family:var(--pixel);letter-spacing:1px;margin-top:2px}
+/* ================================================================
+   2. iOS HAPTIC COMPENSATION — Micro-animations
+   Physical press feel via transform scale + spring easing
+   ================================================================ */
 
-/* Player bar */
-.pbar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;animation:dropIn .5s ease .1s both}
-.prow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.pname{font-family:var(--pixel);font-size:10px;color:var(--mp)}
-.plvl{font-family:var(--pixel);font-size:9px;color:var(--gold);background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.2);padding:3px 8px;border-radius:6px}
-.xpw{background:rgba(57,255,20,.08);border-radius:6px;height:14px;position:relative;overflow:hidden;border:1px solid rgba(57,255,20,.15)}
-.xpf{height:100%;background:linear-gradient(90deg,#1a8a0a,var(--xp));border-radius:5px;transition:width .8s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px rgba(57,255,20,.4);position:relative}
-.xpf::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);border-radius:5px 5px 0 0}
-.xpt{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:8px;font-family:var(--pixel);color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5)}
+/* Universal pressable — replaces missing navigator.vibrate on iOS */
+.pressable {
+  transition: transform 0.12s var(--spring-bounce), opacity 0.12s ease;
+  will-change: transform;
+}
+.pressable:active {
+  transform: scale(0.92);
+  opacity: 0.85;
+}
 
-/* Stats grid */
-.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;animation:dropIn .5s ease .2s both}
-.scard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;position:relative;overflow:hidden}
-.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.scard.g::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.scard.gr::before{background:linear-gradient(90deg,transparent,var(--xp),transparent)}
-.scard.b::before{background:linear-gradient(90deg,transparent,var(--mp),transparent)}
-.si{font-size:18px;margin-bottom:4px}
-.sv{font-family:var(--pixel);font-size:11px;font-weight:700;margin-bottom:2px}
-.scard.g .sv{color:var(--gold)} .scard.gr .sv{color:var(--xp)} .scard.b .sv{color:var(--mp)}
-.sl{font-size:8px;color:var(--dim);font-family:var(--pixel)}
+/* Lighter press for inline elements */
+.pressable-soft:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
 
-/* Achievements */
-.achs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;animation:dropIn .5s ease .25s both}
-.achs::-webkit-scrollbar{display:none}
-.ach{flex-shrink:0;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid;transition:transform .2s}
-.ach:active{transform:scale(.9)}
-.ach.u{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3);box-shadow:0 0 12px rgba(255,215,0,.15)}
-.ach.l{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);filter:grayscale(1) brightness(.4)}
+/* Heavy slam for primary actions */
+.pressable-heavy:active {
+  transform: scale(0.88);
+  opacity: 0.8;
+}
 
-/* Category bars */
-.csec{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;animation:dropIn .5s ease .3s both}
-.stitle{font-family:var(--pixel);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:12px}
-.crow{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.cemoji{font-size:15px;width:22px;text-align:center}
-.ctrack{flex:1;height:18px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}
-.cbar{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;padding-left:6px;position:relative}
-.cbar::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.2),transparent);border-radius:4px 4px 0 0}
-.ctext{font-size:7px;font-family:var(--pixel);color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);white-space:nowrap;position:relative;z-index:1}
-.camt{font-family:var(--pixel);font-size:8px;color:var(--dim);min-width:55px;text-align:right}
+/* Chip / Rune selection bounce */
+.chip, .rune {
+  transition: transform 0.15s var(--spring-bounce),
+              background 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease,
+              box-shadow 0.2s ease;
+  will-change: transform;
+}
+.chip:active, .rune:active {
+  transform: scale(0.90);
+}
+/* Selected state with pop animation */
+.chip.s { animation: chipSelect 0.35s var(--spring-bounce) }
+@keyframes chipSelect {
+  0% { transform: scale(0.88) }
+  50% { transform: scale(1.06) }
+  100% { transform: scale(1) }
+}
 
-/* Expense items */
-.elist{animation:dropIn .5s ease .35s both}
-.eitem{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:all .2s;position:relative}
-.eitem:active{transform:scale(.98);background:rgba(255,255,255,.06)}
-.eitem.new{animation:slideRight .4s ease,glow 1s ease .4s}
-.eicon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.einfo{flex:1;min-width:0}
-.edesc{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.emeta{font-size:10px;color:var(--dim);display:flex;gap:8px;align-items:center}
-.eamts{text-align:right;flex-shrink:0}
-.eorig{font-family:var(--pixel);font-size:11px;font-weight:700;margin-bottom:2px}
-.eusd{font-size:10px;color:var(--xp);font-family:var(--mono)}
-.estatus{display:inline-block;padding:1px 5px;border-radius:4px;font-size:8px;font-family:var(--pixel)}
+/* Log entry press feedback with border flash */
+.log-entry {
+  transition: transform 0.15s var(--spring-bounce),
+              background 0.2s ease,
+              box-shadow 0.2s ease;
+  will-change: transform;
+}
+.log-entry:active {
+  transform: scale(0.975);
+  background: rgba(255,255,255,0.03);
+  box-shadow: inset 0 0 0 1px rgba(212,168,67,0.1);
+}
 
-/* Sending indicator */
-.sending{position:relative}
-.sending::after{content:'📡';position:absolute;top:6px;right:6px;font-size:12px;animation:blink 1s infinite}
+/* Achievement badge press */
+.ach-badge {
+  transition: transform 0.2s var(--spring-bounce);
+  will-change: transform;
+}
+.ach-badge:active { transform: scale(0.82) }
+.ach-badge.u:active { box-shadow: 0 0 18px rgba(212,168,67,0.25) }
 
-/* Filter tabs */
-.ftabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.ftabs::-webkit-scrollbar{display:none}
-.ftab{flex-shrink:0;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--dim);font-size:11px;cursor:pointer;transition:all .15s;font-family:var(--mono)}
-.ftab.a{border-color:var(--purple);background:rgba(178,77,255,.12);color:var(--purple)}
+/* Orb stat cards */
+.orb {
+  transition: transform 0.15s var(--spring-bounce);
+  will-change: transform;
+}
+.orb:active { transform: scale(0.94) }
 
-/* Empty */
-.empty{text-align:center;padding:40px 20px;color:var(--dim)}
-.empty-i{font-size:48px;margin-bottom:12px}
-.empty-t{font-family:var(--pixel);font-size:10px;line-height:1.6}
+/* ================================================================
+   HEADER — below Dynamic Island
+   ================================================================ */
+.header {
+  text-align: center;
+  padding: 12px 0 10px;
+  animation: riseIn 0.6s ease;
+}
+.logo {
+  font-family: var(--head); font-size: 22px; font-weight: 900; letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold), var(--gold-dim));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px var(--gold-glow));
+}
+.logo-sub {
+  font-family: var(--body); font-size: 10px; font-weight: 300;
+  color: var(--text-dim); letter-spacing: 4px; text-transform: uppercase; margin-top: 2px;
+}
 
-/* Modal */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s}
-.ms{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:20px 20px calc(var(--safe-b)+16px) 20px;animation:sheetUp .35s cubic-bezier(.22,1,.36,1)}
-.mh{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 16px}
-.mt{font-family:var(--pixel);font-size:12px;color:var(--gold);text-align:center;margin-bottom:18px}
-.fg{margin-bottom:12px}
-.fl{font-family:var(--pixel);font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:5px;display:block}
-.fi{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:15px;font-family:var(--mono);outline:none;transition:border-color .2s;-webkit-appearance:none}
-.fi:focus{border-color:var(--mp);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--dim);font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--mono);-webkit-user-select:none}
-.chip:active{transform:scale(.95)}
-.chip.s{border-color:var(--mp);background:rgba(0,212,255,.1);color:var(--text);box-shadow:0 0 8px rgba(0,212,255,.15)}
-.fprev{background:rgba(57,255,20,.05);border:1px solid rgba(57,255,20,.15);border-radius:10px;padding:12px;text-align:center;margin-bottom:14px}
-.fprev-l{font-family:var(--pixel);font-size:7px;color:var(--xp);opacity:.7;margin-bottom:4px}
-.fprev-v{font-family:var(--pixel);font-size:16px;color:var(--xp);text-shadow:0 0 10px rgba(57,255,20,.4)}
-.bsave{width:100%;padding:14px;border:none;border-radius:12px;font-family:var(--pixel);font-size:11px;cursor:pointer;transition:all .15s;color:var(--bg);background:linear-gradient(135deg,var(--gold),#ffaa00);box-shadow:0 4px 15px rgba(255,215,0,.3)}
-.bsave:active{transform:scale(.97)}
-.bsave:disabled{opacity:.5;transform:none}
-.bcancel{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:transparent;color:var(--dim);font-family:var(--pixel);font-size:9px;cursor:pointer;margin-top:8px}
+/* ================================================================
+   CONNECTION BANNER
+   ================================================================ */
+.conn {
+  padding: 8px 14px; border-radius: 10px; margin-bottom: 12px; font-size: 11px;
+  display: flex; align-items: center; gap: 8px; font-weight: 500;
+  cursor: pointer; animation: riseIn 0.5s ease 0.1s both;
+}
+.conn.ok { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.12); color: var(--stamina) }
+.conn.off { background: rgba(212,168,67,0.06); border: 1px solid rgba(212,168,67,0.12); color: var(--gold) }
+.conn.err { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.12); color: var(--hp) }
+.conn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; animation: pulse 2s ease infinite }
+.conn.ok .conn-dot { background: var(--stamina); box-shadow: 0 0 8px var(--stamina-glow) }
+.conn.off .conn-dot { background: var(--gold); box-shadow: 0 0 8px var(--gold-glow) }
+.conn.err .conn-dot { background: var(--hp); box-shadow: 0 0 8px var(--hp-glow) }
 
-/* Bottom nav */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 16px calc(var(--safe-b)+4px) 16px;z-index:50}
-.nbtn{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;color:var(--dim);cursor:pointer;padding:6px 12px;border-radius:8px;transition:all .15s;font-family:var(--pixel);font-size:7px}
-.nbtn.a{color:var(--gold)}
-.nbtn:active{transform:scale(.9)}
-.nbtn .ni{font-size:20px}
-.abtn{width:54px;height:54px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,#ffd700,#ff8c00);color:var(--bg);font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:-20px;box-shadow:0 4px 20px rgba(255,215,0,.4);transition:all .15s}
-.abtn:active{transform:scale(.9)}
+/* ================================================================
+   HERO CARD
+   ================================================================ */
+.hero { padding: 18px; margin-bottom: 14px; animation: riseIn 0.5s ease 0.15s both }
+.hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px }
+.hero-title-row { display: flex; align-items: center; gap: 10px }
+.hero-emblem {
+  width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center;
+  justify-content: center; font-size: 22px;
+  background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(168,85,247,0.08));
+  border: 1px solid rgba(212,168,67,0.15);
+}
+.hero-name { font-family: var(--head); font-size: 13px; font-weight: 700; color: var(--gold-bright); letter-spacing: 1px }
+.hero-class { font-size: 10px; color: var(--text-dim); font-weight: 400; margin-top: 1px }
+.hero-level {
+  font-family: var(--head); font-size: 11px; font-weight: 700; color: var(--gold);
+  padding: 4px 12px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(212,168,67,0.1), rgba(212,168,67,0.05));
+  border: 1px solid rgba(212,168,67,0.15);
+}
 
-/* Toast */
-.toast{position:fixed;top:calc(var(--safe-t)+12px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--gold);border-radius:12px;padding:10px 18px;font-family:var(--pixel);font-size:9px;color:var(--gold);z-index:200;text-align:center;box-shadow:0 4px 20px rgba(255,215,0,.2);animation:toastIn .3s ease,toastOut .3s ease 2.2s forwards;white-space:nowrap}
-.xp-pop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-family:var(--pixel);font-size:24px;color:var(--xp);text-shadow:0 0 20px rgba(57,255,20,.6),2px 2px 0 rgba(0,0,0,.5);z-index:200;pointer-events:none;animation:xpPop 1s ease forwards}
+/* XP BAR — SVG shimmer */
+.xp-container {
+  position: relative; height: 18px; border-radius: 9px; overflow: hidden;
+  background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.1);
+}
+.xp-fill {
+  height: 100%; border-radius: 8px; position: relative;
+  transition: width 1s var(--spring-smooth);
+  background: linear-gradient(90deg, #15803d, var(--stamina));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 15px var(--stamina-glow);
+}
+.xp-shimmer {
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  animation: shimmer 3s ease infinite;
+}
+@keyframes shimmer { 0%{left:-60%} 100%{left:160%} }
+.xp-label {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 9px; font-weight: 700; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5); letter-spacing: 0.5px;
+}
 
-@keyframes dropIn{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes slideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-@keyframes glow{0%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}100%{box-shadow:0 0 0 0 transparent}}
-@keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
-@keyframes toastOut{to{opacity:0;transform:translate(-50%,-10px)}}
-@keyframes xpPop{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}50%{transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-120%) scale(1)}}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+/* ================================================================
+   STAT ORBS
+   ================================================================ */
+.orbs { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; animation: riseIn 0.5s ease 0.2s both }
+.orb { padding: 16px 8px; text-align: center; position: relative }
+.orb-icon { font-size: 20px; margin-bottom: 6px; filter: drop-shadow(0 0 6px var(--gold-glow)) }
+.orb-val { font-family: var(--head); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px }
+.orb-label { font-size: 9px; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px }
+.orb.gold .orb-val { color: var(--gold-bright) }
+.orb.stam .orb-val { color: var(--stamina) }
+.orb.mana .orb-val { color: var(--mana) }
+.orb::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-border), transparent) }
 
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+/* ================================================================
+   ACHIEVEMENTS
+   ================================================================ */
+.ach-row { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; animation: riseIn 0.5s ease 0.25s both }
+.ach-row::-webkit-scrollbar { display: none }
+.ach-badge {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 19px; border: 1.5px solid;
+}
+.ach-badge.u { background: rgba(212,168,67,0.08); border-color: rgba(212,168,67,0.2); box-shadow: 0 0 10px rgba(212,168,67,0.1) }
+.ach-badge.l { background: rgba(255,255,255,0.01); border-color: rgba(255,255,255,0.04); filter: grayscale(1) brightness(0.3) }
+
+/* ================================================================
+   SKILL TREE (Category bars)
+   ================================================================ */
+.skills { padding: 16px; margin-bottom: 14px; animation: riseIn 0.5s ease 0.3s both }
+.sec-title { font-family: var(--head); font-size: 10px; font-weight: 600; color: var(--text-mid); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px }
+.skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px }
+.skill-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0 }
+.skill-track { flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.03) }
+.skill-bar { height: 100%; border-radius: 5px; position: relative; transition: width 0.8s var(--spring-smooth) }
+.skill-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg,rgba(255,255,255,0.12),transparent); border-radius: 5px 5px 0 0 }
+.skill-bar-label { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 9px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 1; white-space: nowrap }
+.skill-amt { font-family: var(--head); font-size: 9px; font-weight: 600; color: var(--text-dim); min-width: 56px; text-align: right }
+
+/* ================================================================
+   COMBAT LOG (Transactions)
+   ================================================================ */
+.combat-log { animation: riseIn 0.5s ease 0.35s both }
+.log-entry {
+  padding: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 12px;
+  cursor: pointer; border-radius: 16px; position: relative;
+}
+.log-entry.sending { animation: sendPulse 1.5s ease infinite }
+@keyframes sendPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+.log-icon {
+  width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.04);
+}
+.log-body { flex: 1; min-width: 0 }
+.log-desc { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px }
+.log-meta { display: flex; gap: 8px; align-items: center; font-size: 10px; color: var(--text-dim) }
+.log-tag { display: inline-block; padding: 2px 7px; border-radius: 5px; font-size: 8px; font-weight: 600; letter-spacing: 0.3px }
+.log-amounts { text-align: right; flex-shrink: 0 }
+.log-orig { font-family: var(--head); font-size: 12px; font-weight: 700; margin-bottom: 2px }
+.log-usd { font-size: 10px; color: var(--stamina); font-weight: 600 }
+.log-del { background: none; border: none; color: var(--hp); font-size: 14px; cursor: pointer; padding: 6px 8px; border-radius: 8px; opacity: 0.4; transition: all 0.2s }
+.log-del:active { opacity: 1; transform: scale(0.8) }
+
+/* Loot-drop animation */
+.log-entry.loot-drop { animation: lootDrop 0.5s var(--spring-smooth), lootGlow 1.2s ease 0.5s }
+@keyframes lootDrop { from{opacity:0;transform:translateY(-20px) scale(0.9)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes lootGlow { 0%{box-shadow:0 0 0 0 var(--gold-glow)} 50%{box-shadow:0 0 20px 4px var(--gold-glow)} 100%{box-shadow:0 0 0 0 transparent} }
+
+/* ================================================================
+   FILTER RUNES
+   ================================================================ */
+.runes { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; padding: 2px 0 }
+.runes::-webkit-scrollbar { display: none }
+.rune {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 500;
+  cursor: pointer; border: 1px solid transparent; background: rgba(255,255,255,0.02); color: var(--text-dim);
+}
+.rune.a {
+  border-color: var(--arcane); background: rgba(168,85,247,0.08); color: var(--arcane);
+  box-shadow: 0 0 10px rgba(168,85,247,0.08);
+}
+
+/* ================================================================
+   EMPTY STATE
+   ================================================================ */
+.empty { text-align: center; padding: 50px 20px; animation: riseIn 0.5s ease }
+.empty-glyph { font-size: 56px; margin-bottom: 14px; filter: drop-shadow(0 0 15px var(--gold-glow)) }
+.empty-text { font-family: var(--head); font-size: 11px; color: var(--text-dim); line-height: 1.8; letter-spacing: 1px }
+
+/* ================================================================
+   3. BOTTOM NAV — iOS HOME INDICATOR SAFE
+   Uses padding-bottom with sab to clear the swipe indicator
+   ================================================================ */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: linear-gradient(180deg, rgba(8,6,14,0.88), rgba(8,6,14,0.98));
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  backdrop-filter: blur(24px) saturate(1.5);
+  border-top: 1px solid var(--glass-border);
+  display: flex; justify-content: space-around; align-items: center;
+  /* Critical: sab clears iOS home indicator */
+  padding: 6px 16px calc(var(--sab) + 6px) 16px;
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  border: none; background: none; color: var(--text-dim); cursor: pointer;
+  padding: 6px 14px; border-radius: 10px;
+  font-family: var(--body); font-size: 8px; font-weight: 600;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  /* Pressable feel */
+  transition: transform 0.12s var(--spring-bounce), color 0.2s ease;
+  will-change: transform;
+}
+.nav-btn:active { transform: scale(0.85) }
+.nav-btn.a { color: var(--gold) }
+.nav-btn .ni { font-size: 22px; line-height: 1 }
+
+/* QUICK CAST button */
+.cast-btn {
+  width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--gold);
+  cursor: pointer; margin-top: -22px;
+  background: linear-gradient(135deg, var(--gold), #c4942a); color: var(--void);
+  font-size: 28px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 25px rgba(212,168,67,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform 0.12s var(--spring-bounce), box-shadow 0.15s ease;
+  will-change: transform;
+  position: relative;
+}
+.cast-btn:active {
+  transform: scale(0.82);
+  box-shadow: 0 2px 12px rgba(212,168,67,0.25);
+}
+.cast-btn::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid rgba(212,168,67,0.2);
+  animation: castRing 3s ease infinite;
+}
+@keyframes castRing { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.08);opacity:0} }
+
+/* ================================================================
+   BOTTOM SHEET MODAL — iOS Spring Physics
+   ================================================================ */
+.overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+.sheet {
+  background: linear-gradient(180deg, var(--obsidian), var(--abyss));
+  border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 480px;
+  /* iOS keyboard: max-height adapts via JS visualViewport */
+  max-height: 88dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* Spring animation for opening — mimics iOS sheet */
+  animation: sheetSpring 0.45s var(--spring-bounce);
+  /* Critical: sab clears home indicator inside sheet */
+  padding: 16px 18px calc(var(--sab) + 16px) 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+@keyframes sheetSpring {
+  0% { transform: translateY(100%) }
+  100% { transform: translateY(0) }
+}
+/* Sheet closing animation class (applied via JS) */
+.sheet.closing {
+  animation: sheetClose 0.3s var(--spring-native) forwards;
+}
+@keyframes sheetClose {
+  to { transform: translateY(105%); opacity: 0.8 }
+}
+
+.sheet-handle {
+  width: 36px; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px;
+  margin: 0 auto 14px;
+}
+.sheet-title {
+  font-family: var(--head); font-size: 14px; font-weight: 700; color: var(--gold-bright);
+  text-align: center; margin-bottom: 18px; letter-spacing: 1px;
+}
+
+/* Form elements */
+.fg { margin-bottom: 14px }
+.fl {
+  font-family: var(--head); font-size: 9px; font-weight: 600; color: var(--text-dim);
+  letter-spacing: 2px; margin-bottom: 6px; display: block; text-transform: uppercase;
+}
+.fi {
+  width: 100%; padding: 13px 16px; border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.03); color: var(--text);
+  font-size: 16px; /* iOS: 16px prevents autozoom */
+  font-family: var(--body); font-weight: 500;
+  outline: none; transition: all 0.2s ease;
+}
+.fi:focus {
+  border-color: rgba(168,85,247,0.3);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.06);
+}
+.fi::placeholder { color: var(--text-dim) }
+.fr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+
+/* Chips */
+.chips { display: flex; flex-wrap: wrap; gap: 6px }
+.chip {
+  padding: 8px 14px; border-radius: 10px; border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.02); color: var(--text-dim);
+  font-size: 12px; font-weight: 500; cursor: pointer;
+}
+.chip.s {
+  border-color: rgba(168,85,247,0.25); background: rgba(168,85,247,0.08); color: var(--text);
+  box-shadow: 0 0 8px rgba(168,85,247,0.08);
+}
+
+/* Conversion preview */
+.conv {
+  background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.1);
+  border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 14px;
+}
+.conv-label { font-size: 9px; font-weight: 600; color: var(--stamina); opacity: 0.6; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase }
+.conv-val {
+  font-family: var(--head); font-size: 18px; font-weight: 700; color: var(--stamina);
+  text-shadow: 0 0 12px var(--stamina-glow);
+}
+
+/* Buttons */
+.btn-cast {
+  width: 100%; padding: 16px; border: none; border-radius: 14px; cursor: pointer;
+  font-family: var(--head); font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: var(--void);
+  box-shadow: 0 4px 20px rgba(212,168,67,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.12s var(--spring-bounce), box-shadow 0.15s ease;
+  will-change: transform;
+}
+.btn-cast:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(212,168,67,0.2) }
+.btn-cast:disabled { opacity: 0.4; transform: none }
+.btn-dismiss {
+  width: 100%; padding: 13px; border: 1px solid var(--glass-border); border-radius: 14px;
+  background: transparent; color: var(--text-dim); font-family: var(--body); font-size: 12px;
+  font-weight: 500; cursor: pointer; margin-top: 8px;
+  transition: transform 0.12s var(--spring-bounce); will-change: transform;
+}
+.btn-dismiss:active { transform: scale(0.97) }
+
+/* ================================================================
+   SETTINGS DIALOG — centered, safe from Dynamic Island
+   ================================================================ */
+.dialog-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  background: rgba(0,0,0,0.75);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--sat) + 20px) 20px calc(var(--sab) + 20px) 20px;
+  animation: fadeIn 0.2s;
+}
+.dialog {
+  background: var(--obsidian); border: 1px solid var(--glass-border); border-radius: 20px;
+  padding: 24px 20px; width: 100%; max-width: 400px; animation: riseIn 0.35s ease;
+}
+.dialog-title { font-family: var(--head); font-size: 12px; font-weight: 700; color: var(--gold-bright); text-align: center; margin-bottom: 16px; letter-spacing: 1px }
+.dialog-input {
+  width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.03); color: var(--text); font-size: 12px; font-family: var(--body);
+  outline: none; margin-bottom: 12px; word-break: break-all;
+  -webkit-user-select: text; user-select: text;
+}
+.dialog-input:focus { border-color: rgba(168,85,247,0.3) }
+.dialog-hint { font-size: 10px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.6 }
+.dialog-btns { display: flex; gap: 8px }
+.dbtn {
+  flex: 1; padding: 12px; border: none; border-radius: 10px; font-family: var(--body);
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  transition: transform 0.12s var(--spring-bounce); will-change: transform;
+}
+.dbtn:active { transform: scale(0.93) }
+.dbtn-save { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: var(--void) }
+.dbtn-cancel { background: rgba(255,255,255,0.04); color: var(--text-dim); border: 1px solid var(--glass-border) }
+.dbtn-test { background: rgba(59,130,246,0.08); color: var(--mana); border: 1px solid rgba(59,130,246,0.15) }
+.tres { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 500; margin-top: 8px; animation: riseIn 0.2s }
+
+/* ================================================================
+   TOAST — positioned below Dynamic Island
+   ================================================================ */
+.toast {
+  position: fixed;
+  /* sat + extra padding to clear Dynamic Island fully */
+  top: calc(var(--sat) + 16px);
+  left: 50%; transform: translateX(-50%); z-index: 250;
+  background: var(--obsidian); border: 1px solid rgba(212,168,67,0.2); border-radius: 14px;
+  padding: 10px 20px; font-size: 12px; font-weight: 600; color: var(--gold-bright);
+  text-align: center; white-space: nowrap;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  animation: toastIn 0.35s var(--spring-bounce), toastOut 0.3s ease 2.2s forwards;
+  /* Ensure it doesn't go behind the Dynamic Island */
+  max-width: calc(100% - 40px);
+}
+
+/* XP POP — centered vertically, safe */
+.xp-pop {
+  position: fixed; top: 38%; left: 50%; transform: translate(-50%,-50%);
+  z-index: 250; pointer-events: none;
+  font-family: var(--head); font-size: 28px; font-weight: 900;
+  color: var(--stamina); letter-spacing: 2px;
+  text-shadow: 0 0 25px var(--stamina-glow), 0 2px 0 rgba(0,0,0,0.5);
+  animation: xpPop 1.1s ease forwards;
+}
+
+/* ================================================================
+   CORE ANIMATIONS
+   ================================================================ */
+@keyframes riseIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+@keyframes toastIn { from{opacity:0;transform:translate(-50%,-12px)} to{opacity:1;transform:translate(-50%,0)} }
+@keyframes toastOut { to{opacity:0;transform:translate(-50%,-12px)} }
+@keyframes xpPop { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.3)} 20%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} 40%{transform:translate(-50%,-50%) scale(1)} 100%{opacity:0;transform:translate(-50%,-130%) scale(0.9)} }
+
+/* Visual flash when expense is saved — replaces haptic */
+.save-flash {
+  animation: flashGold 0.5s ease;
+}
+@keyframes flashGold {
+  0% { box-shadow: inset 0 0 0 0 rgba(212,168,67,0) }
+  30% { box-shadow: inset 0 0 40px 10px rgba(212,168,67,0.08) }
+  100% { box-shadow: inset 0 0 0 0 rgba(212,168,67,0) }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 2px }
 </style>
 </head>
 <body>
 
-<div class="app" id="app"></div>
+<!-- Atmosphere layers (outside scroll to prevent repaints) -->
+<div class="atmosphere"></div>
+<div class="dust"></div>
+
+<!-- Scrollable wrapper — prevents iOS rubber-band showing gaps -->
+<div class="app-scroll" id="appScroll">
+  <div class="app" id="app"></div>
+</div>
 
 <script>
-// ===================== CONFIG =====================
+// ================================================================
+// DATA
+// ================================================================
 const RATES={USD:1,EUR:1.085,GBP:1.295,UAH:0.024,RUB:0.011,PLN:0.255,CHF:1.135};
 const SYM={USD:'$',EUR:'€',GBP:'£',UAH:'₴',RUB:'₽',PLN:'zł',CHF:'₣'};
 const CATS=[
-  {id:'food',label:'Еда',emoji:'🍔',color:'#FF7F50'},
-  {id:'housing',label:'Жильё',emoji:'🏠',color:'#4ECDC4'},
-  {id:'transport',label:'Транспорт',emoji:'🚗',color:'#45B7D1'},
-  {id:'entertainment',label:'Развлечения',emoji:'🎉',color:'#F7DC6F'},
-  {id:'shopping',label:'Покупки',emoji:'🛒',color:'#BB8FCE'},
-  {id:'health',label:'Здоровье',emoji:'💊',color:'#FF6B6B'},
-  {id:'education',label:'Образование',emoji:'📚',color:'#82E0AA'},
-  {id:'subscriptions',label:'Подписки',emoji:'📱',color:'#AED6F1'},
-  {id:'other',label:'Другое',emoji:'🔧',color:'#999'},
+  {id:'food',label:'Еда',emoji:'🍖',color:'#FF7F50'},
+  {id:'housing',label:'Жильё',emoji:'🏰',color:'#4ECDC4'},
+  {id:'transport',label:'Транспорт',emoji:'🐎',color:'#45B7D1'},
+  {id:'entertainment',label:'Развлечения',emoji:'🎭',color:'#F7DC6F'},
+  {id:'shopping',label:'Покупки',emoji:'⚒️',color:'#BB8FCE'},
+  {id:'health',label:'Здоровье',emoji:'❤️‍🩹',color:'#FF6B6B'},
+  {id:'education',label:'Знания',emoji:'📜',color:'#82E0AA'},
+  {id:'subscriptions',label:'Подписки',emoji:'🔮',color:'#AED6F1'},
+  {id:'other',label:'Другое',emoji:'⚙️',color:'#888'},
 ];
 const STS=[
-  {id:'paid',label:'Оплачено',emoji:'✅',color:'#00C853'},
-  {id:'planned',label:'Запланировано',emoji:'⏳',color:'#FFD600'},
-  {id:'recurring',label:'Регулярный',emoji:'🔄',color:'#2196F3'},
+  {id:'paid',label:'Оплачено',emoji:'⚔️',color:'#22c55e'},
+  {id:'planned',label:'План',emoji:'🗺️',color:'#eab308'},
+  {id:'recurring',label:'Регулярный',emoji:'♾️',color:'#3b82f6'},
 ];
 const ACHS=[
   {id:'first',emoji:'⚔️',title:'Первый удар',desc:'1 расход',check:d=>d.length>=1},
   {id:'ten',emoji:'🛡️',title:'Десятка',desc:'10 записей',check:d=>d.length>=10},
   {id:'fifty',emoji:'👑',title:'Полтинник',desc:'50 записей',check:d=>d.length>=50},
-  {id:'big',emoji:'💎',title:'Крупная рыба',desc:'>$500',check:d=>d.some(e=>toUSD(e.amount,e.currency)>500)},
+  {id:'big',emoji:'💎',title:'Крупная добыча',desc:'>$500',check:d=>d.some(e=>toUSD(e.amount,e.currency)>500)},
   {id:'multi',emoji:'🌍',title:'Мультивалюта',desc:'3+ валюты',check:d=>new Set(d.map(e=>e.currency)).size>=3},
   {id:'saver',emoji:'🏆',title:'Экономный',desc:'5×<$5',check:d=>d.filter(e=>toUSD(e.amount,e.currency)<5).length>=5},
   {id:'streak',emoji:'🔥',title:'Серия',desc:'7 дней',check:d=>checkStreak(d,7)},
@@ -234,356 +719,499 @@ const ACHS=[
 
 function checkStreak(d,n){if(!d.length)return false;const ds=[...new Set(d.map(e=>e.date))].sort().reverse();let s=1;for(let i=1;i<ds.length;i++){if((new Date(ds[i-1])-new Date(ds[i]))/864e5===1){s++;if(s>=n)return true}else s=1}return s>=n}
 function toUSD(a,c){return(parseFloat(a)||0)*(RATES[c]||1)}
-function fUSD(v){return '$'+v.toFixed(2)}
-function tday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function fDate(s){const p=s.split('-');return `${p[2]}.${p[1]}`}
+function fU(v){return'$'+v.toFixed(2)}
+function td(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function fD(s){const p=s.split('-');return`${p[2]}.${p[1]}`}
+function getFrame(l){if(l>=25)return'frame-lv25';if(l>=15)return'frame-lv15';if(l>=10)return'frame-lv10';if(l>=5)return'frame-lv5';return'frame-lv1'}
 
-// ===================== STATE =====================
-let S={
-  expenses:[],
-  screen:'home',
-  modal:false,
-  settings:false,
-  filter:'all',
-  form:{date:tday(),desc:'',amount:'',currency:'EUR',category:'food',status:'paid'},
-  editId:null,
-  toasts:[],
-  xpPops:[],
-  apiUrl:null,
-  apiStatus:'off', // off, ok, err
-  sending:false,
-};
+// ================================================================
+// iOS HAPTIC COMPENSATION — Audio Cues Engine
+// Unlocks AudioContext on first touch (iOS requirement)
+// ================================================================
+let audioCtx = null;
+let audioUnlocked = false;
 
-// ===================== STORAGE =====================
-function load(){
-  try{
-    S.apiUrl=localStorage.getItem('cq_api')||null;
-    const d=JSON.parse(localStorage.getItem('cq_data')||'{}');
-    if(d.expenses)S.expenses=d.expenses;
-  }catch(e){}
-  if(!S.expenses.length){
-    S.expenses=[
-      {id:'demo1',date:'2026-03-19',desc:'Аренда квартиры',amount:'850',currency:'EUR',category:'housing',status:'recurring'},
-      {id:'demo2',date:'2026-03-19',desc:'Продукты в Billa',amount:'47.50',currency:'EUR',category:'food',status:'paid'},
-      {id:'demo3',date:'2026-03-18',desc:'Spotify Premium',amount:'10.99',currency:'USD',category:'subscriptions',status:'recurring'},
-      {id:'demo4',date:'2026-03-17',desc:'Uber до аэропорта',amount:'35',currency:'EUR',category:'transport',status:'paid'},
-      {id:'demo5',date:'2026-03-16',desc:'Курс на Udemy',amount:'12.99',currency:'USD',category:'education',status:'paid'},
-    ];
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  initAudio();
+  // iOS requires user-gesture triggered resume
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
   }
+  // Play silent buffer to fully unlock
+  const buf = audioCtx.createBuffer(1, 1, 22050);
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.connect(audioCtx.destination);
+  src.start(0);
+  audioUnlocked = true;
+}
+
+// Synthesized audio cues — no external files needed
+function playSound(type) {
+  if (!audioCtx || !audioUnlocked) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === 'coin') {
+      // Coin clink — short high-freq ping
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1800, now);
+      osc.frequency.exponentialRampToValueAtTime(2400, now + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else if (type === 'swoosh') {
+      // Modal open swoosh — noise-like sweep
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
+      gain.gain.setValueAtTime(0.03, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      osc.start(now);
+      osc.stop(now + 0.18);
+    } else if (type === 'tap') {
+      // Soft tap — very short click
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } else if (type === 'levelup') {
+      // Level up fanfare — ascending arpeggio
+      [880, 1100, 1320, 1760].forEach((freq, i) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, now + i * 0.08);
+        g.gain.setValueAtTime(0.06, now + i * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.2);
+        o.start(now + i * 0.08);
+        o.stop(now + i * 0.08 + 0.2);
+      });
+    }
+  } catch(e) { /* Silent fail */ }
+}
+
+// Combined feedback: vibrate (Android) + audio (iOS) + visual
+function feedback(type) {
+  // Try vibration first (Android/Chrome)
+  try {
+    if (navigator.vibrate) {
+      if (type === 'heavy') navigator.vibrate([30, 10, 30]);
+      else if (type === 'medium') navigator.vibrate([15]);
+      else navigator.vibrate([8]);
+    }
+  } catch(e) {}
+
+  // Audio cue (iOS compensation)
+  if (type === 'coin') playSound('coin');
+  else if (type === 'swoosh') playSound('swoosh');
+  else if (type === 'levelup') playSound('levelup');
+  else playSound('tap');
+}
+
+// Unlock on first touch anywhere
+document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+document.addEventListener('mousedown', unlockAudio, { once: true });
+
+// ================================================================
+// iOS KEYBOARD — Adjust sheet height when keyboard opens
+// ================================================================
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    const sheet = document.querySelector('.sheet');
+    if (sheet) {
+      const vvh = window.visualViewport.height;
+      sheet.style.maxHeight = (vvh - 20) + 'px';
+    }
+  });
+}
+
+// ================================================================
+// STATE
+// ================================================================
+let S={expenses:[],screen:'home',modal:false,settings:false,filter:'all',
+  form:{date:td(),desc:'',amount:'',currency:'EUR',category:'food',status:'paid'},
+  editId:null,toasts:[],xpPops:[],apiUrl:null,apiStatus:'off',sending:false};
+
+function load(){
+  try{S.apiUrl=localStorage.getItem('cq_api')||null;
+    const d=JSON.parse(localStorage.getItem('cq_data2')||'{}');
+    if(d.expenses)S.expenses=d.expenses}catch(e){}
+  if(!S.expenses.length)S.expenses=[
+    {id:'d1',date:'2026-03-19',desc:'Аренда квартиры',amount:'850',currency:'EUR',category:'housing',status:'recurring'},
+    {id:'d2',date:'2026-03-19',desc:'Продукты в Billa',amount:'47.50',currency:'EUR',category:'food',status:'paid'},
+    {id:'d3',date:'2026-03-18',desc:'Spotify Premium',amount:'10.99',currency:'USD',category:'subscriptions',status:'recurring'},
+    {id:'d4',date:'2026-03-17',desc:'Uber до аэропорта',amount:'35',currency:'EUR',category:'transport',status:'paid'},
+    {id:'d5',date:'2026-03-16',desc:'Курс на Udemy',amount:'12.99',currency:'USD',category:'education',status:'paid'},
+  ];
   if(S.apiUrl)testApi(true);
 }
-function save(){try{localStorage.setItem('cq_data',JSON.stringify({expenses:S.expenses}))}catch(e){}}
+function save(){try{localStorage.setItem('cq_data2',JSON.stringify({expenses:S.expenses}))}catch(e){}}
 
-// ===================== GOOGLE SHEETS API =====================
+// ================================================================
+// SHEETS API
+// ================================================================
 async function testApi(silent){
-  if(!S.apiUrl){S.apiStatus='off';if(!silent)render();return}
-  try{
-    const r=await fetch(S.apiUrl+'?action=ping');
-    if(r.ok){const d=await r.json();S.apiStatus=d.status==='ok'?'ok':'err'}
-    else S.apiStatus='err';
-  }catch(e){S.apiStatus='err'}
-  if(!silent)render();
+  if(!S.apiUrl){S.apiStatus='off';if(!silent)R();return}
+  try{const r=await fetch(S.apiUrl+'?action=ping');if(r.ok){const d=await r.json();S.apiStatus=d.status==='ok'?'ok':'err'}else S.apiStatus='err'}catch(e){S.apiStatus='err'}
+  if(!silent)R();
 }
-
 async function sendToSheets(exp){
   if(!S.apiUrl||S.apiStatus!=='ok')return false;
-  try{
-    const r=await fetch(S.apiUrl,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({action:'add',expense:exp}),
-    });
-    const d=await r.json();
-    return d.status==='ok';
-  }catch(e){console.error('Sheets error:',e);return false}
+  try{const r=await fetch(S.apiUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'add',expense:exp})});
+    const d=await r.json();return d.status==='ok'}catch(e){return false}
 }
-
-async function syncAllToSheets(){
+async function syncAll(){
   if(!S.apiUrl||S.apiStatus!=='ok')return false;
-  try{
-    const r=await fetch(S.apiUrl,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({action:'batch',expenses:S.expenses}),
-    });
-    const d=await r.json();
-    return d.status==='ok';
-  }catch(e){return false}
+  try{const r=await fetch(S.apiUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'batch',expenses:S.expenses})});
+    const d=await r.json();return d.status==='ok'}catch(e){return false}
 }
 
-// ===================== GAME =====================
+// ================================================================
+// GAME
+// ================================================================
 function getXP(){return S.expenses.length*15+S.expenses.reduce((s,e)=>s+Math.floor(toUSD(e.amount,e.currency)/10),0)}
 function getLvl(){return Math.floor(getXP()/100)+1}
-function getXPinLvl(){return getXP()%100}
-function getTitle(l){if(l<3)return'НОВИЧОК';if(l<6)return'СЛЕДОПЫТ';if(l<10)return'РЫЦАРЬ';if(l<15)return'МАГИСТР';if(l<25)return'АРХИМАГ';return'ЛЕГЕНДА'}
+function getXPpct(){return getXP()%100}
+function getTitle(l){if(l<3)return'Apprentice';if(l<6)return'Pathfinder';if(l<10)return'Knight';if(l<15)return'Archmage';if(l<25)return'Sovereign';return'Legend'}
+function getEmblem(l){if(l<3)return'🗡️';if(l<6)return'🛡️';if(l<10)return'⚔️';if(l<15)return'🔮';if(l<25)return'👑';return'💀'}
 
-// ===================== RENDER =====================
+// ================================================================
+// RENDER
+// ================================================================
 function R(){
   const app=document.getElementById('app');
+  const lvl=getLvl();
+  app.className='app '+getFrame(lvl);
   let h='';
   if(S.screen==='home')h=rHome();
-  else if(S.screen==='history')h=rHistory();
+  else if(S.screen==='history')h=rHist();
   else if(S.screen==='stats')h=rStats();
   app.innerHTML=h+rNav();
   if(S.modal)app.innerHTML+=rModal();
   if(S.settings)app.innerHTML+=rSettings();
-  // Toasts
-  S.toasts.forEach(t=>{const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2600)});
-  S.toasts=[];
-  S.xpPops.forEach(x=>{const e=document.createElement('div');e.className='xp-pop';e.textContent=`+${x} XP`;document.body.appendChild(e);setTimeout(()=>e.remove(),1100)});
-  S.xpPops=[];
+
+  S.toasts.forEach(t=>{const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2600)});S.toasts=[];
+  S.xpPops.forEach(x=>{const e=document.createElement('div');e.className='xp-pop';e.textContent=`+${x} XP`;document.body.appendChild(e);setTimeout(()=>e.remove(),1200)});S.xpPops=[];
+
   bind();
 }
 
-function rConnBanner(){
-  if(S.apiStatus==='ok')return `<div class="conn-banner ok"><div class="conn-dot"></div>Google Sheets подключён 📊</div>`;
-  if(S.apiStatus==='err')return `<div class="conn-banner err" onclick="openSettings()"><div class="conn-dot"></div>Ошибка подключения — нажми для настройки</div>`;
-  return `<div class="conn-banner off" onclick="openSettings()"><div class="conn-dot"></div>Подключи Google Sheets → нажми сюда</div>`;
+function rConn(){
+  if(S.apiStatus==='ok')return`<div class="conn ok pressable" onclick="openSettings()"><div class="conn-dot"></div>Sheets connected</div>`;
+  if(S.apiStatus==='err')return`<div class="conn err pressable" onclick="openSettings()"><div class="conn-dot"></div>Connection failed — tap to fix</div>`;
+  return`<div class="conn off pressable" onclick="openSettings()"><div class="conn-dot"></div>Connect Google Sheets</div>`;
 }
 
 function rHome(){
-  const l=getLvl(),xp=getXPinLvl();
-  const tot=S.expenses.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
-  const mo=S.expenses.filter(e=>e.date.startsWith(tday().slice(0,7)));
-  const moUSD=mo.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
+  const l=getLvl(),xp=getXPpct(),tot=S.expenses.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
+  const mo=S.expenses.filter(e=>e.date.startsWith(td().slice(0,7)));
+  const moU=mo.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
   const catT=CATS.map(c=>({...c,total:S.expenses.filter(e=>e.category===c.id).reduce((s,e)=>s+toUSD(e.amount,e.currency),0)})).filter(c=>c.total>0).sort((a,b)=>b.total-a.total);
   const mx=catT[0]?.total||1;
   const recent=[...S.expenses].sort((a,b)=>b.date.localeCompare(a.date)||String(b.id).localeCompare(String(a.id))).slice(0,5);
 
-  return `
-  <div class="header"><div class="logo">⚔️ COINQUEST ⚔️</div><div class="logo-sub">EXPENSE TRACKER</div></div>
-  ${rConnBanner()}
-  <div class="pbar">
-    <div class="prow"><div class="pname">${getTitle(l)}</div><div class="plvl">LVL ${l}</div></div>
-    <div class="xpw"><div class="xpf" style="width:${xp}%"></div><div class="xpt">${xp}/100 XP</div></div>
+  return`
+  <div class="header"><div class="logo">COINQUEST</div><div class="logo-sub">Financial RPG</div></div>
+  ${rConn()}
+  <div class="hero panel">
+    <div class="hero-top">
+      <div class="hero-title-row">
+        <div class="hero-emblem">${getEmblem(l)}</div>
+        <div><div class="hero-name">${getTitle(l)}</div><div class="hero-class">Gold Tracker</div></div>
+      </div>
+      <div class="hero-level">LV ${l}</div>
+    </div>
+    <div class="xp-container"><div class="xp-fill" style="width:${xp}%"><div class="xp-shimmer"></div></div><div class="xp-label">${xp}/100 XP</div></div>
   </div>
-  <div class="sgrid">
-    <div class="scard g"><div class="si">💰</div><div class="sv">${fUSD(tot)}</div><div class="sl">ВСЕГО</div></div>
-    <div class="scard gr"><div class="si">📅</div><div class="sv">${fUSD(moUSD)}</div><div class="sl">МЕСЯЦ</div></div>
-    <div class="scard b"><div class="si">🎯</div><div class="sv">${S.expenses.length}</div><div class="sl">ЗАПИСЕЙ</div></div>
+
+  <div class="orbs">
+    <div class="orb panel gold pressable"><div class="orb-icon">💰</div><div class="orb-val">${fU(tot)}</div><div class="orb-label">Total</div></div>
+    <div class="orb panel stam pressable"><div class="orb-icon">📅</div><div class="orb-val">${fU(moU)}</div><div class="orb-label">Month</div></div>
+    <div class="orb panel mana pressable"><div class="orb-icon">🎯</div><div class="orb-val">${S.expenses.length}</div><div class="orb-label">Entries</div></div>
   </div>
-  <div class="achs">${ACHS.map(a=>`<div class="ach ${a.check(S.expenses)?'u':'l'}" title="${a.title}">${a.emoji}</div>`).join('')}</div>
-  ${catT.length?`<div class="csec"><div class="stitle">📊 ПО КАТЕГОРИЯМ</div>${catT.map(c=>`<div class="crow"><div class="cemoji">${c.emoji}</div><div class="ctrack"><div class="cbar" style="width:${Math.max(c.total/mx*100,8)}%;background:linear-gradient(90deg,${c.color}CC,${c.color}88)"><span class="ctext">${c.label}</span></div></div><div class="camt">${fUSD(c.total)}</div></div>`).join('')}</div>`:''}
-  <div class="elist"><div class="stitle" style="margin-bottom:10px">🗡️ ПОСЛЕДНИЕ РАСХОДЫ</div>
-  ${recent.length?recent.map(e=>rItem(e)).join(''):`<div class="empty"><div class="empty-i">🏰</div><div class="empty-t">НАЧНИ КВЕСТ!<br>ДОБАВЬ ПЕРВЫЙ РАСХОД</div></div>`}
+
+  <div class="ach-row">${ACHS.map(a=>`<div class="ach-badge ${a.check(S.expenses)?'u':'l'}" title="${a.title}">${a.emoji}</div>`).join('')}</div>
+
+  ${catT.length?`<div class="skills panel"><div class="sec-title">Skill Tree</div>
+    ${catT.map(c=>`<div class="skill-row"><div class="skill-icon">${c.emoji}</div>
+      <div class="skill-track"><div class="skill-bar" style="width:${Math.max(c.total/mx*100,10)}%;background:linear-gradient(90deg,${c.color}BB,${c.color}66)">
+        <span class="skill-bar-label">${c.label}</span></div></div>
+      <div class="skill-amt">${fU(c.total)}</div></div>`).join('')}
+  </div>`:''}
+
+  <div class="combat-log"><div class="sec-title" style="margin:0 4px 10px">Combat Log</div>
+    ${recent.length?recent.map(e=>rEntry(e)).join(''):`<div class="empty"><div class="empty-glyph">🏰</div><div class="empty-text">Begin Your Quest<br>Add Your First Expense</div></div>`}
   </div>`;
 }
 
-function rHistory(){
+function rHist(){
   const f=S.filter==='all'?[...S.expenses]:S.expenses.filter(e=>e.category===S.filter);
   const sorted=f.sort((a,b)=>b.date.localeCompare(a.date)||String(b.id).localeCompare(String(a.id)));
-  return `
-  <div class="header"><div class="logo" style="font-size:14px">📜 ЖУРНАЛ</div></div>
-  <div class="ftabs">
-    <div class="ftab ${S.filter==='all'?'a':''}" data-f="all">Все</div>
-    ${CATS.map(c=>S.expenses.some(e=>e.category===c.id)?`<div class="ftab ${S.filter===c.id?'a':''}" data-f="${c.id}">${c.emoji} ${c.label}</div>`:'').join('')}
+  const total=f.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
+  return`
+  <div class="header"><div class="logo" style="font-size:16px">CHRONICLE</div><div class="logo-sub">Transaction History</div></div>
+  <div class="runes">
+    <div class="rune ${S.filter==='all'?'a':''}" data-f="all">All</div>
+    ${CATS.map(c=>S.expenses.some(e=>e.category===c.id)?`<div class="rune ${S.filter===c.id?'a':''}" data-f="${c.id}">${c.emoji} ${c.label}</div>`:'').join('')}
   </div>
-  <div class="elist">
-    ${sorted.length?sorted.map(e=>rItem(e,true)).join(''):`<div class="empty"><div class="empty-i">📭</div><div class="empty-t">НЕТ ЗАПИСЕЙ</div></div>`}
+  <div class="combat-log">
+    ${sorted.length?sorted.map(e=>rEntry(e,true)).join(''):`<div class="empty"><div class="empty-glyph">📜</div><div class="empty-text">No Records Found</div></div>`}
   </div>
-  <div style="text-align:center;margin-top:12px;font-family:var(--pixel);font-size:9px;color:var(--dim)">
-    ИТОГО: <span style="color:var(--gold)">${fUSD((S.filter==='all'?S.expenses:S.expenses.filter(e=>e.category===S.filter)).reduce((s,e)=>s+toUSD(e.amount,e.currency),0))}</span>
+  <div style="text-align:center;margin-top:16px;font-family:var(--head);font-size:10px;color:var(--text-dim);letter-spacing:1px">
+    Total: <span style="color:var(--gold-bright)">${fU(total)}</span> · ${f.length} entries
   </div>`;
 }
 
 function rStats(){
   const tot=S.expenses.reduce((s,e)=>s+toUSD(e.amount,e.currency),0);
   const l=getLvl();
-  const currencies={};
-  S.expenses.forEach(e=>{if(!currencies[e.currency])currencies[e.currency]={total:0,count:0};currencies[e.currency].total+=parseFloat(e.amount)||0;currencies[e.currency].count++});
-  return `
-  <div class="header"><div class="logo" style="font-size:14px">📊 СТАТИСТИКА</div></div>
-  <div class="csec"><div class="stitle">🏆 АЧИВКИ (${ACHS.filter(a=>a.check(S.expenses)).length}/${ACHS.length})</div>
-  ${ACHS.map(a=>{const u=a.check(S.expenses);return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;${u?'':'opacity:.35'}"><div style="font-size:22px">${a.emoji}</div><div><div style="font-family:var(--pixel);font-size:9px;color:${u?'var(--gold)':'var(--dim)'}">${a.title}</div><div style="font-size:11px;color:var(--dim)">${a.desc}</div></div>${u?'<div style="margin-left:auto;color:var(--xp);font-family:var(--pixel);font-size:8px">✓</div>':''}</div>`}).join('')}
+  const cur={};
+  S.expenses.forEach(e=>{if(!cur[e.currency])cur[e.currency]={total:0,count:0};cur[e.currency].total+=parseFloat(e.amount)||0;cur[e.currency].count++});
+  return`
+  <div class="header"><div class="logo" style="font-size:16px">ARMORY</div><div class="logo-sub">Statistics & Achievements</div></div>
+  <div class="panel" style="padding:18px;margin-bottom:14px;animation:riseIn .4s ease">
+    <div class="sec-title">Achievements (${ACHS.filter(a=>a.check(S.expenses)).length}/${ACHS.length})</div>
+    ${ACHS.map(a=>{const u=a.check(S.expenses);return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--glass-border);${u?'':'opacity:.3'}">
+      <div style="font-size:24px">${a.emoji}</div>
+      <div style="flex:1"><div style="font-family:var(--head);font-size:10px;font-weight:700;color:${u?'var(--gold-bright)':'var(--text-dim)'};letter-spacing:.5px">${a.title}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:1px">${a.desc}</div></div>
+      ${u?'<div style="color:var(--stamina);font-size:14px">✦</div>':''}</div>`}).join('')}
   </div>
-  <div class="csec"><div class="stitle">💱 ПО ВАЛЮТАМ</div>
-  ${Object.entries(currencies).map(([c,d])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px">${SYM[c]} ${c}</div><div style="text-align:right"><div style="font-family:var(--pixel);font-size:10px">${SYM[c]}${d.total.toFixed(2)}</div><div style="font-size:10px;color:var(--xp)">${fUSD(d.total*RATES[c])}</div></div></div>`).join('')}
-  <div style="display:flex;justify-content:space-between;padding:8px 0;font-family:var(--pixel);font-size:10px"><div style="color:var(--gold)">ИТОГО USD</div><div style="color:var(--gold)">${fUSD(tot)}</div></div>
+  <div class="panel" style="padding:18px;margin-bottom:14px;animation:riseIn .4s ease .1s both">
+    <div class="sec-title">Currency Breakdown</div>
+    ${Object.entries(cur).map(([c,d])=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--glass-border)">
+      <div style="font-size:13px;font-weight:600">${SYM[c]} ${c}</div>
+      <div style="text-align:right"><div style="font-family:var(--head);font-size:11px;font-weight:700">${SYM[c]}${d.total.toFixed(2)}</div>
+      <div style="font-size:10px;color:var(--stamina)">${fU(d.total*RATES[c])}</div></div></div>`).join('')}
+    <div style="display:flex;justify-content:space-between;padding:10px 0;font-family:var(--head);font-size:11px;font-weight:700">
+      <span style="color:var(--gold-bright)">Grand Total</span><span style="color:var(--gold-bright)">${fU(tot)}</span></div>
   </div>
-  <div class="csec"><div class="stitle">🎮 ПРОФИЛЬ</div>
-    <div style="text-align:center;padding:12px 0">
-      <div style="font-size:36px;margin-bottom:8px">⚔️</div>
-      <div style="font-family:var(--pixel);font-size:12px;color:var(--mp);margin-bottom:4px">${getTitle(l)}</div>
-      <div style="font-family:var(--pixel);font-size:18px;color:var(--gold);margin-bottom:8px">УРОВЕНЬ ${l}</div>
-      <div style="font-size:11px;color:var(--dim)">XP: ${getXP()}</div>
-    </div>
+  <div class="panel" style="padding:24px;text-align:center;margin-bottom:14px;animation:riseIn .4s ease .2s both">
+    <div style="font-size:48px;margin-bottom:8px;filter:drop-shadow(0 0 15px var(--gold-glow))">${getEmblem(l)}</div>
+    <div style="font-family:var(--head);font-size:13px;color:var(--frost);letter-spacing:2px">${getTitle(l)}</div>
+    <div style="font-family:var(--head);font-size:24px;font-weight:900;color:var(--gold-bright);margin:6px 0;letter-spacing:1px">LEVEL ${l}</div>
+    <div style="font-size:11px;color:var(--text-dim)">Total XP: ${getXP()}</div>
   </div>
-  <button onclick="doSync()" style="width:100%;padding:14px;border:2px solid var(--mp);border-radius:12px;background:rgba(0,212,255,.08);color:var(--mp);font-family:var(--pixel);font-size:9px;cursor:pointer;margin-bottom:12px">🔄 SYNC ALL → GOOGLE SHEETS</button>
-  `;
+  <button class="pressable-heavy" onclick="doSync()" style="width:100%;padding:16px;border:2px solid var(--mana);border-radius:14px;background:rgba(59,130,246,.06);color:var(--mana);font-family:var(--head);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-bottom:14px">SYNC ALL → GOOGLE SHEETS</button>`;
 }
 
-function rItem(e,del=false){
+function rEntry(e,del=false){
   const c=CATS.find(x=>x.id===e.category)||CATS[8];
   const st=STS.find(x=>x.id===e.status)||STS[0];
   const u=toUSD(e.amount,e.currency);
-  return `<div class="eitem${S.sending===e.id?' sending':''}" data-id="${e.id}">
-    <div class="eicon" style="background:${c.color}18;border:1px solid ${c.color}33">${c.emoji}</div>
-    <div class="einfo"><div class="edesc">${e.desc}</div><div class="emeta"><span>${fDate(e.date)}</span><span class="estatus" style="background:${st.color}22;color:${st.color}">${st.emoji} ${st.label}</span></div></div>
-    <div class="eamts"><div class="eorig">${SYM[e.currency]}${e.amount}</div><div class="eusd">${fUSD(u)}</div></div>
-    ${del?`<button onclick="event.stopPropagation();delExp('${e.id}')" style="background:none;border:none;color:var(--hp);font-size:16px;cursor:pointer;padding:4px 8px;margin-left:4px">✕</button>`:''}
+  return`<div class="log-entry${S.sending===e.id?' sending':''}" data-id="${e.id}">
+    <div class="log-icon" style="background:${c.color}0D;border-color:${c.color}1A">${c.emoji}</div>
+    <div class="log-body"><div class="log-desc">${e.desc}</div>
+      <div class="log-meta"><span>${fD(e.date)}</span><span class="log-tag" style="background:${st.color}15;color:${st.color}">${st.emoji} ${st.label}</span></div></div>
+    <div class="log-amounts"><div class="log-orig">${SYM[e.currency]}${e.amount}</div><div class="log-usd">${fU(u)}</div></div>
+    ${del?`<button class="log-del" onclick="event.stopPropagation();delExp('${e.id}')">✕</button>`:''}
   </div>`;
 }
 
 function rModal(){
   const f=S.form,u=toUSD(f.amount,f.currency);
-  return `<div class="mo" onclick="if(event.target===this)closeM()"><div class="ms">
-    <div class="mh"></div><div class="mt">${S.editId?'✏️ РЕДАКТИРОВАТЬ':'⚔️ НОВЫЙ РАСХОД'}</div>
-    <div class="fg"><div class="fl">ОПИСАНИЕ</div><input class="fi" id="fd" type="text" placeholder="За что платили..." value="${f.desc}"></div>
-    <div class="fr"><div class="fg"><div class="fl">СУММА</div><input class="fi" id="fa" type="number" step="0.01" placeholder="0.00" value="${f.amount}" inputmode="decimal"></div>
-    <div class="fg"><div class="fl">ДАТА</div><input class="fi" id="fdt" type="date" value="${f.date}"></div></div>
-    <div class="fg"><div class="fl">ВАЛЮТА</div><div class="chips">${Object.keys(RATES).map(c=>`<div class="chip ${f.currency===c?'s':''}" data-cur="${c}">${SYM[c]} ${c}</div>`).join('')}</div></div>
-    <div class="fg"><div class="fl">КАТЕГОРИЯ</div><div class="chips">${CATS.map(c=>`<div class="chip ${f.category===c.id?'s':''}" data-cat="${c.id}" style="${f.category===c.id?`border-color:${c.color};background:${c.color}18;color:${c.color}`:''}">${c.emoji} ${c.label}</div>`).join('')}</div></div>
-    <div class="fg"><div class="fl">СТАТУС</div><div class="chips">${STS.map(s=>`<div class="chip ${f.status===s.id?'s':''}" data-st="${s.id}">${s.emoji} ${s.label}</div>`).join('')}</div></div>
-    ${f.amount?`<div class="fprev"><div class="fprev-l">КОНВЕРТАЦИЯ В USD</div><div class="fprev-v">${SYM[f.currency]}${f.amount} → ${fUSD(u)}</div></div>`:''}
-    <button class="bsave" onclick="saveExp()">${S.editId?'💾 СОХРАНИТЬ':'⚔️ ДОБАВИТЬ (+15 XP)'}</button>
-    <button class="bcancel" onclick="closeM()">ОТМЕНА</button>
+  return`<div class="overlay" onclick="if(event.target===this)closeM()"><div class="sheet" id="modalSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">${S.editId?'Edit Entry':'Quick Cast'}</div>
+    <div class="fg"><div class="fl">Description</div><input class="fi" id="fd" type="text" placeholder="What did you spend on..." value="${f.desc}" autocomplete="off"></div>
+    <div class="fr"><div class="fg"><div class="fl">Amount</div><input class="fi" id="fa" type="number" step="0.01" placeholder="0.00" value="${f.amount}" inputmode="decimal"></div>
+    <div class="fg"><div class="fl">Date</div><input class="fi" id="fdt" type="date" value="${f.date}"></div></div>
+    <div class="fg"><div class="fl">Currency</div><div class="chips">${Object.keys(RATES).map(c=>`<div class="chip ${f.currency===c?'s':''}" data-cur="${c}">${SYM[c]} ${c}</div>`).join('')}</div></div>
+    <div class="fg"><div class="fl">Category</div><div class="chips">${CATS.map(c=>`<div class="chip ${f.category===c.id?'s':''}" data-cat="${c.id}" style="${f.category===c.id?`border-color:${c.color}44;background:${c.color}0D;color:${c.color}`:''}">${c.emoji} ${c.label}</div>`).join('')}</div></div>
+    <div class="fg"><div class="fl">Status</div><div class="chips">${STS.map(s=>`<div class="chip ${f.status===s.id?'s':''}" data-st="${s.id}">${s.emoji} ${s.label}</div>`).join('')}</div></div>
+    ${f.amount?`<div class="conv"><div class="conv-label">Converted to USD</div><div class="conv-val">${SYM[f.currency]}${f.amount} → ${fU(u)}</div></div>`:''}
+    <button class="btn-cast pressable-heavy" onclick="saveExp()">${S.editId?'Save Changes':'⚔️  CAST  EXPENSE  (+15 XP)'}</button>
+    <button class="btn-dismiss pressable-soft" onclick="closeM()">Dismiss</button>
   </div></div>`;
 }
 
 function rSettings(){
-  return `<div class="settings-overlay" onclick="if(event.target===this)closeSettings()">
-    <div class="settings-card">
-      <div class="settings-title">⚙️ GOOGLE SHEETS</div>
-      <div class="settings-label">URL ВАШЕГО WEB APP</div>
-      <input class="settings-input" id="api-url" type="url" placeholder="https://script.google.com/macros/s/..." value="${S.apiUrl||''}">
-      <div class="settings-hint">
-        1. Создай Google Sheet<br>
-        2. Расширения → Apps Script<br>
-        3. Вставь код из coinquest-google-apps-script.js<br>
-        4. Выполни setupSheet()<br>
-        5. Развернуть → Веб-приложение<br>
-        6. Скопируй URL сюда ↑
-      </div>
-      <div class="settings-btns">
-        <button class="sbtn sbtn-test" onclick="testConn()">🔌 ТЕСТ</button>
-        <button class="sbtn sbtn-save" onclick="saveSettings()">💾 СОХРАНИТЬ</button>
-        <button class="sbtn sbtn-cancel" onclick="closeSettings()">✕</button>
-      </div>
-      <div id="test-result"></div>
-    </div>
-  </div>`;
+  return`<div class="dialog-overlay" onclick="if(event.target===this)closeSettings()"><div class="dialog">
+    <div class="dialog-title">Google Sheets</div>
+    <div class="fl">Web App URL</div>
+    <input class="dialog-input" id="api-url" type="url" placeholder="https://script.google.com/macros/s/..." value="${S.apiUrl||''}">
+    <div class="dialog-hint">1. Create Google Sheet → Extensions → Apps Script<br>2. Paste CoinQuest backend code → Run setupSheet<br>3. Deploy → Web App → Copy URL here</div>
+    <div class="dialog-btns">
+      <button class="dbtn dbtn-test pressable" onclick="testConn()">Test</button>
+      <button class="dbtn dbtn-save pressable" onclick="saveSettings()">Save</button>
+      <button class="dbtn dbtn-cancel pressable" onclick="closeSettings()">✕</button>
+    </div><div id="test-result"></div>
+  </div></div>`;
 }
 
 function rNav(){
-  return `<div class="bnav">
-    <button class="nbtn ${S.screen==='home'?'a':''}" data-scr="home"><span class="ni">🏠</span>ГЛАВНАЯ</button>
-    <button class="nbtn ${S.screen==='history'?'a':''}" data-scr="history"><span class="ni">📜</span>ЖУРНАЛ</button>
-    <button class="abtn" onclick="openM()">+</button>
-    <button class="nbtn ${S.screen==='stats'?'a':''}" data-scr="stats"><span class="ni">📊</span>СТАТА</button>
-    <button class="nbtn" onclick="openSettings()"><span class="ni">⚙️</span>НАСТРОЙКИ</button>
+  return`<div class="nav">
+    <button class="nav-btn ${S.screen==='home'?'a':''}" data-scr="home"><span class="ni">🏠</span>Hub</button>
+    <button class="nav-btn ${S.screen==='history'?'a':''}" data-scr="history"><span class="ni">📜</span>Log</button>
+    <button class="cast-btn" onclick="openM()">+</button>
+    <button class="nav-btn ${S.screen==='stats'?'a':''}" data-scr="stats"><span class="ni">⚔️</span>Armory</button>
+    <button class="nav-btn" onclick="openSettings()"><span class="ni">⚙️</span>Config</button>
   </div>`;
 }
 
-// ===================== EVENTS =====================
+// ================================================================
+// BIND
+// ================================================================
 function bind(){
-  document.querySelectorAll('.nbtn[data-scr]').forEach(b=>{b.onclick=()=>{S.screen=b.dataset.scr;R()}});
-  document.querySelectorAll('.ftab').forEach(t=>{t.onclick=()=>{S.filter=t.dataset.f;R()}});
+  document.querySelectorAll('.nav-btn[data-scr]').forEach(b=>{b.onclick=()=>{feedback('tap');S.screen=b.dataset.scr;R()}});
+  document.querySelectorAll('.rune').forEach(t=>{t.onclick=()=>{feedback('tap');S.filter=t.dataset.f;R()}});
   if(S.modal){
     const d=document.getElementById('fd'),a=document.getElementById('fa'),dt=document.getElementById('fdt');
     if(d)d.oninput=()=>{S.form.desc=d.value};
-    if(a)a.oninput=()=>{S.form.amount=a.value;const p=document.querySelector('.fprev-v');if(p&&S.form.amount)p.textContent=`${SYM[S.form.currency]}${S.form.amount} → ${fUSD(toUSD(S.form.amount,S.form.currency))}`};
+    if(a)a.oninput=()=>{S.form.amount=a.value;const p=document.querySelector('.conv-val');if(p&&S.form.amount)p.textContent=`${SYM[S.form.currency]}${S.form.amount} → ${fU(toUSD(S.form.amount,S.form.currency))}`};
     if(dt)dt.oninput=()=>{S.form.date=dt.value};
-    document.querySelectorAll('[data-cur]').forEach(e=>{e.onclick=()=>{S.form.currency=e.dataset.cur;R()}});
-    document.querySelectorAll('[data-cat]').forEach(e=>{e.onclick=()=>{S.form.category=e.dataset.cat;R()}});
-    document.querySelectorAll('[data-st]').forEach(e=>{e.onclick=()=>{S.form.status=e.dataset.st;R()}});
+    document.querySelectorAll('[data-cur]').forEach(e=>{e.onclick=()=>{feedback('tap');S.form.currency=e.dataset.cur;R()}});
+    document.querySelectorAll('[data-cat]').forEach(e=>{e.onclick=()=>{feedback('tap');S.form.category=e.dataset.cat;R()}});
+    document.querySelectorAll('[data-st]').forEach(e=>{e.onclick=()=>{feedback('tap');S.form.status=e.dataset.st;R()}});
+
+    // Sheet drag-to-dismiss
+    initSheetDrag();
   }
-  // Click to edit
-  document.querySelectorAll('.eitem').forEach(el=>{
-    if(!el.querySelector('button')){
-      el.onclick=()=>{
-        const id=el.dataset.id;
-        const exp=S.expenses.find(e=>String(e.id)===String(id));
-        if(exp){S.form={...exp};S.editId=id;S.modal=true;R()}
-      }
-    }
+  document.querySelectorAll('.log-entry').forEach(el=>{
+    if(!el.querySelector('button')){el.onclick=()=>{
+      const id=el.dataset.id;const exp=S.expenses.find(e=>String(e.id)===String(id));
+      if(exp){feedback('swoosh');S.form={...exp};S.editId=id;S.modal=true;R()}}}
   });
 }
 
-// ===================== ACTIONS =====================
-window.openM=function(){S.form={date:tday(),desc:'',amount:'',currency:'EUR',category:'food',status:'paid'};S.editId=null;S.modal=true;R()};
-window.closeM=function(){S.modal=false;S.editId=null;R()};
+// ================================================================
+// SHEET DRAG-TO-DISMISS (iOS native feel)
+// ================================================================
+function initSheetDrag() {
+  const sheet = document.getElementById('modalSheet');
+  if (!sheet) return;
+  let startY = 0, currentY = 0, dragging = false;
 
-window.saveExp=async function(){
-  if(!S.form.desc||!S.form.amount){S.toasts.push('⚠️ Заполни описание и сумму!');R();return}
+  sheet.addEventListener('touchstart', (e) => {
+    // Only drag from handle area (top 40px)
+    const rect = sheet.getBoundingClientRect();
+    const touchY = e.touches[0].clientY - rect.top;
+    if (touchY > 50) return;
+    startY = e.touches[0].clientY;
+    dragging = true;
+    sheet.style.transition = 'none';
+  }, { passive: true });
+
+  sheet.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    currentY = e.touches[0].clientY - startY;
+    if (currentY < 0) currentY = 0; // Can't drag up
+    // Rubber-band resistance
+    const dampened = currentY * 0.6;
+    sheet.style.transform = `translateY(${dampened}px)`;
+    // Fade overlay
+    const overlay = sheet.parentElement;
+    if (overlay) overlay.style.opacity = Math.max(0.3, 1 - dampened / 400);
+  }, { passive: true });
+
+  sheet.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+    sheet.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+    const overlay = sheet.parentElement;
+    if (currentY > 120) {
+      // Dismiss
+      sheet.style.transform = 'translateY(110%)';
+      if (overlay) overlay.style.opacity = '0';
+      setTimeout(closeM, 300);
+    } else {
+      // Snap back
+      sheet.style.transform = 'translateY(0)';
+      if (overlay) overlay.style.opacity = '1';
+    }
+    currentY = 0;
+  }, { passive: true });
+}
+
+// ================================================================
+// ACTIONS
+// ================================================================
+window.openM = function(){
+  feedback('swoosh');
+  S.form={date:td(),desc:'',amount:'',currency:'EUR',category:'food',status:'paid'};
+  S.editId=null; S.modal=true; R();
+};
+
+window.closeM = function(){
+  S.modal=false; S.editId=null; R();
+};
+
+window.saveExp = async function(){
+  if(!S.form.desc||!S.form.amount){S.toasts.push('⚠️ Fill description & amount');R();return}
+  feedback('coin');
+
   const pL=getLvl(),pA=ACHS.filter(a=>a.check(S.expenses)).length;
   const id=S.editId||Date.now().toString();
 
   if(S.editId){
     S.expenses=S.expenses.map(e=>String(e.id)===String(S.editId)?{...S.form,id:S.editId}:e);
-    S.toasts.push('✏️ Обновлено!');
+    S.toasts.push('✏️ Updated');
   }else{
-    const newExp={...S.form,id};
-    S.expenses.push(newExp);
+    const ne={...S.form,id};
+    S.expenses.push(ne);
     S.xpPops.push(15);
-
-    // Send to Google Sheets in background
     if(S.apiUrl&&S.apiStatus==='ok'){
       S.sending=id;
-      sendToSheets(newExp).then(ok=>{
-        S.sending=false;
-        if(ok)S.toasts.push('📊 Записано в Google Sheets!');
-        else S.toasts.push('⚠️ Sheets: ошибка записи');
-        R();
-      });
+      sendToSheets(ne).then(ok=>{S.sending=false;S.toasts.push(ok?'📊 Saved to Sheets':'⚠️ Sheet write failed');R()});
     }
   }
 
   save();
   const nL=getLvl(),nA=ACHS.filter(a=>a.check(S.expenses)).length;
-  if(nL>pL)S.toasts.push(`🎉 LEVEL UP! → ${getTitle(nL)}`);
+  if(nL>pL){feedback('levelup');S.toasts.push(`🎉 LEVEL UP → ${getTitle(nL)}!`)}
   if(nA>pA){const la=ACHS.filter(a=>a.check(S.expenses)).pop();S.toasts.push(`🏆 ${la.emoji} ${la.title}!`)}
   S.modal=false;S.editId=null;R();
+
+  // Visual flash on app container
+  const app=document.getElementById('app');
+  if(app){app.classList.add('save-flash');setTimeout(()=>app.classList.remove('save-flash'),500)}
 };
 
-window.delExp=function(id){
-  S.expenses=S.expenses.filter(e=>String(e.id)!==String(id));
-  save();S.toasts.push('🗑️ Удалено');R();
-};
+window.delExp = function(id){feedback('tap');S.expenses=S.expenses.filter(e=>String(e.id)!==String(id));save();S.toasts.push('🗑️ Removed');R()};
+window.openSettings = function(){feedback('swoosh');S.settings=true;R()};
+window.closeSettings = function(){S.settings=false;R()};
 
-window.openSettings=function(){S.settings=true;R()};
-window.closeSettings=function(){S.settings=false;R()};
-
-window.testConn=async function(){
+window.testConn = async function(){
   const url=document.getElementById('api-url')?.value?.trim();
-  const res=document.getElementById('test-result');
-  if(!url){res.innerHTML='<div class="test-result" style="background:rgba(255,56,96,.1);color:var(--hp)">Введи URL!</div>';return}
-  res.innerHTML='<div class="test-result" style="background:rgba(0,212,255,.1);color:var(--mp)">⏳ Проверяю...</div>';
-  try{
-    const r=await fetch(url+'?action=ping');
-    const d=await r.json();
-    if(d.status==='ok'){
-      res.innerHTML='<div class="test-result" style="background:rgba(57,255,20,.1);color:var(--xp)">✅ Подключение успешно!</div>';
-    }else{
-      res.innerHTML='<div class="test-result" style="background:rgba(255,56,96,.1);color:var(--hp)">❌ Неверный ответ</div>';
-    }
-  }catch(e){
-    res.innerHTML=`<div class="test-result" style="background:rgba(255,56,96,.1);color:var(--hp)">❌ ${e.message}</div>`;
-  }
+  const r=document.getElementById('test-result');
+  if(!url){r.innerHTML='<div class="tres" style="background:rgba(239,68,68,.08);color:var(--hp)">Enter URL first</div>';return}
+  r.innerHTML='<div class="tres" style="background:rgba(59,130,246,.08);color:var(--mana)">Testing...</div>';
+  try{const res=await fetch(url+'?action=ping');const d=await res.json();
+    r.innerHTML=d.status==='ok'?'<div class="tres" style="background:rgba(34,197,94,.08);color:var(--stamina)">✦ Connected successfully</div>':'<div class="tres" style="background:rgba(239,68,68,.08);color:var(--hp)">Invalid response</div>'}
+  catch(e){r.innerHTML=`<div class="tres" style="background:rgba(239,68,68,.08);color:var(--hp)">${e.message}</div>`}
 };
 
-window.saveSettings=function(){
+window.saveSettings = function(){
   const url=document.getElementById('api-url')?.value?.trim();
-  S.apiUrl=url||null;
-  localStorage.setItem('cq_api',S.apiUrl||'');
-  S.settings=false;
-  testApi(false).then(()=>{
-    if(S.apiStatus==='ok')S.toasts.push('✅ Google Sheets подключён!');
-    else if(S.apiUrl)S.toasts.push('⚠️ Не удалось подключиться');
-    R();
-  });
-};
+  S.apiUrl=url||null;localStorage.setItem('cq_api',S.apiUrl||'');S.settings=false;
+  testApi(false).then(()=>{S.toasts.push(S.apiStatus==='ok'?'✦ Sheets connected':'⚠️ Connection failed');R()})};
 
-window.doSync=async function(){
-  if(!S.apiUrl||S.apiStatus!=='ok'){S.toasts.push('⚠️ Сначала подключи Sheets в ⚙️');R();return}
-  S.toasts.push('🔄 Синхронизация...');R();
-  const ok=await syncAllToSheets();
-  if(ok)S.toasts.push('✅ Все данные записаны в Sheets!');
-  else S.toasts.push('❌ Ошибка синхронизации');
-  R();
-};
+window.doSync = async function(){
+  if(!S.apiUrl||S.apiStatus!=='ok'){S.toasts.push('⚠️ Connect Sheets first');R();return}
+  S.toasts.push('🔄 Syncing...');R();
+  const ok=await syncAll();S.toasts.push(ok?'✦ All data synced':'❌ Sync failed');R()};
 
-// ===================== INIT =====================
-load();R();
+// ================================================================
+// INIT
+// ================================================================
+load();
+R();
 </script>
 </body>
 </html>
